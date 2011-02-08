@@ -45,7 +45,8 @@ module Redfinger
         # it's probably not finger, let's try without ssl
         # http://code.google.com/p/webfinger/wiki/WebFingerProtocol
         # says first ssl should be tried then without ssl, should fix issue #2
-        doc = Nokogiri::XML::Document.parse(RestClient.get(xrd_url(false)).body)
+        xrd_client.url = xrd_url(false)
+        doc = Nokogiri::XML::Document.parse(xrd_client.get.body)
       end
 
       doc.at('Link[rel=lrdd]').attribute('template').value
