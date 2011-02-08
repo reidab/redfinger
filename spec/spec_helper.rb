@@ -32,6 +32,21 @@ def invalid_host_xrd
   XML
 end
 
+def yahoo_host_xrd
+  <<-XML
+  <?xml version='1.0' encoding='UTF-8'?>
+  <XRD xmlns='http://docs.oasis-open.org/ns/xri/xrd-1.0'>
+    <Host xmlns='http://host-meta.net/xrd/1.0'>yahoo.com</Host>
+    <Link>
+      <Title>WebFinger</Title>
+      <Rel>http://webfinger.info/rel/service</Rel>
+      <Rel>describedby</Rel>
+      <URITemplate>http://webfinger.yahooapis.com/?id={%id}</URITemplate>
+    </Link>
+  </XRD>
+  XML
+end
+
 def finger_xrd
   <<-XML
   <?xml version='1.0'?>

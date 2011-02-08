@@ -60,6 +60,12 @@ describe Redfinger::Client do
       lambda{Redfinger::Client.new('acct:abc@example.com').send(:retrieve_template_from_xrd)}.should raise_error(Redfinger::ResourceNotFound)
     end
 
+
+    it 'should parse the outdated XRD file from Yahoo' do
+      stub_request(:get, 'https://yahoo.com/.well-known/host-meta').to_return(:status => 200, :body => yahoo_host_xrd)
+      Redfinger::Client.new('acct:abc@yahoo.com').send(:retrieve_template_from_xrd).should == 'http://webfinger.yahooapis.com/?id={%id}'
+    end
+
     it 'should return the template' do
       stub_request(:get, 'https://example.com/.well-known/host-meta').to_return(:status => 200, :body => host_xrd)
       Redfinger::Client.new('acct:abc@example.com').send(:retrieve_template_from_xrd).should == 'http://example.com/webfinger/?q={uri}'

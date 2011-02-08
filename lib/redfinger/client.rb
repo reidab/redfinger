@@ -50,7 +50,15 @@ module Redfinger
       end
 
       lrdd = doc.at('Link[rel=lrdd]')
-      template = lrdd.attribute('template').value if lrdd
+
+      if lrdd
+        template = lrdd.attribute('template').value
+      else
+        link = doc.at('Link')
+        if link.search('Rel').any?{|l| l.text == "http://webfinger.info/rel/service"}
+          template = link.at("URITemplate").text
+        end
+      end
 
       raise Redfinger::ResourceNotFound, "An XRD file was retrieved, but it contained no template." if template.nil?
 
