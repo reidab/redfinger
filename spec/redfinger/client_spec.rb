@@ -54,7 +54,12 @@ describe Redfinger::Client do
       stub_request(:get, /.well-known\/host-meta/).to_return(:status => 404, :body => '404 Not Found')
       lambda{Redfinger::Client.new('acct:abc@example.com').send(:retrieve_template_from_xrd)}.should raise_error(Redfinger::ResourceNotFound)
     end
-    
+
+    it 'should raise Redfinger::ResourceNotFound if an XRD file is retrieved, but contains no template' do
+      stub_request(:get, 'https://example.com/.well-known/host-meta').to_return(:status => 200, :body => invalid_host_xrd)
+      lambda{Redfinger::Client.new('acct:abc@example.com').send(:retrieve_template_from_xrd)}.should raise_error(Redfinger::ResourceNotFound)
+    end
+
     it 'should return the template' do
       stub_request(:get, 'https://example.com/.well-known/host-meta').to_return(:status => 200, :body => host_xrd)
       Redfinger::Client.new('acct:abc@example.com').send(:retrieve_template_from_xrd).should == 'http://example.com/webfinger/?q={uri}'

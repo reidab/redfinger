@@ -49,7 +49,12 @@ module Redfinger
         doc = Nokogiri::XML::Document.parse(xrd_client.get.body)
       end
 
-      doc.at('Link[rel=lrdd]').attribute('template').value
+      lrdd = doc.at('Link[rel=lrdd]')
+      template = lrdd.attribute('template').value if lrdd
+
+      raise Redfinger::ResourceNotFound, "An XRD file was retrieved, but it contained no template." if template.nil?
+
+      template
     rescue  Errno::ECONNREFUSED, Errno::ETIMEDOUT,
             RestClient::RequestTimeout, RestClient::ResourceNotFound, RestClient::Forbidden
       if ssl

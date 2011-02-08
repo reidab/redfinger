@@ -21,6 +21,17 @@ def host_xrd
   XML
 end
 
+def invalid_host_xrd
+  <<-XML
+  <?xml version='1.0' encoding='UTF-8'?>
+  <XRD xmlns='http://docs.oasis-open.org/ns/xri/xrd-1.0'>
+    <Link>
+      <Title>Resource Descriptor</Title>
+    </Link>
+  </XRD>
+  XML
+end
+
 def finger_xrd
   <<-XML
   <?xml version='1.0'?>
