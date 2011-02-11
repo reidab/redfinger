@@ -55,7 +55,7 @@ module Redfinger
       raise Redfinger::ResourceNotFound, "An XRD file was retrieved, but it contained no template." if template.nil?
 
       template
-    rescue  Errno::ECONNREFUSED, Errno::ETIMEDOUT, Errno::ECONNRESET,
+    rescue  Errno::ECONNREFUSED, Errno::ETIMEDOUT, Errno::ECONNRESET, OpenSSL::SSL::SSLError,
             RestClient::RequestTimeout, RestClient::ResourceNotFound, RestClient::Forbidden
       if ssl
         retrieve_template_from_xrd(false)
