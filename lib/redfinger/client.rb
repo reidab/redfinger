@@ -18,7 +18,7 @@ module Redfinger
       self.uri_template ||= retrieve_template_from_xrd
       begin
         return Finger.new self.account, RestClient.get(swizzle).body
-      rescue RestClient::ResourceNotFound
+      rescue RestClient::RequestTimeout, RestClient::ResourceNotFound, RestClient::Forbidden, RestClient::InternalServerError
         return Finger.new self.account, RestClient.get(swizzle(account_with_scheme)).body
       end
     end
