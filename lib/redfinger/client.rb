@@ -21,6 +21,9 @@ module Redfinger
       rescue RestClient::RequestTimeout, RestClient::ResourceNotFound, RestClient::Forbidden, RestClient::InternalServerError
         return Finger.new self.account, RestClient.get(swizzle(account_with_scheme)).body
       end
+    rescue RestClient::ResourceNotFound, RestClient::InternalServerError
+      # Google is currently raising Internal Server Errors when trying to finger users with private profiles.
+      raise Redfinger::ResourceNotFound, "Could not retrieve an XRD file for this user."
     end
 
     def xrd_url(ssl = true)
