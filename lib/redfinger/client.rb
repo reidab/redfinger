@@ -48,8 +48,7 @@ module Redfinger
         # it's probably not finger, let's try without ssl
         # http://code.google.com/p/webfinger/wiki/WebFingerProtocol
         # says first ssl should be tried then without ssl, should fix issue #2
-        xrd_client.url = xrd_url(false)
-        doc = Nokogiri::XML::Document.parse(xrd_client.get.body)
+        raise Redfinger::InvalidXRDNamespace
       end
 
       lrdd = doc.at('Link[rel=lrdd]')
@@ -58,7 +57,7 @@ module Redfinger
       raise Redfinger::ResourceNotFound, "An XRD file was retrieved, but it contained no template." if template.nil?
 
       template
-    rescue  Errno::ECONNREFUSED, Errno::ETIMEDOUT, Errno::ECONNRESET, OpenSSL::SSL::SSLError,
+    rescue  Redfinger::InvalidXRDNamespace, Errno::ECONNREFUSED, Errno::ETIMEDOUT, Errno::ECONNRESET, OpenSSL::SSL::SSLError,
             RestClient::RequestTimeout, RestClient::ResourceNotFound, RestClient::Forbidden, RestClient::InternalServerError
       if ssl
         retrieve_template_from_xrd(false)

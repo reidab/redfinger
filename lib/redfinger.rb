@@ -5,6 +5,7 @@ require 'redfinger/client'
 
 module Redfinger
   class ResourceNotFound < StandardError; end
+  class InvalidXRDNamespace < StandardError; end
   # A SecurityException occurs when something in the
   # webfinger process does not appear safe, such as
   # mismatched domains or an unverified XRD signature.
